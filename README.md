@@ -1,5 +1,6 @@
 This is a very simple CLI tool to fix my closed caption files downloaded from
-YouTube to import them into my favorite CC exitor without pain.
+YouTube to import them into my favorite CC editor, 
+which is https://github.com/SubtitleEdit/subtitleedit without pain.
 
 The originally downloaded files have overlapping cc times, i. e. the next
 line starts before the former ends. This can be annoying to be edited.
