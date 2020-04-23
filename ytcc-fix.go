@@ -4,7 +4,8 @@ import (
 	"bufio"
 	"flag"
 	"os"
-	"strconv"
+
+	"./timestamp"
 )
 
 // NEWLINE neue Zeile
@@ -25,16 +26,20 @@ func check(e error) {
 }
 
 func fixTimecode(this, next string) string {
-	nextmilsec, err := strconv.Atoi(next[8:11])
-	check(err)
+	thisStart, thisEnd := timestamp.ReadTwoFromString(this)
+	nextStart, _ := timestamp.ReadTwoFromString(next)
 
-	nextmilsec--
-	temp := "000"
-	if nextmilsec >= 0 {
-		temp = "00" + strconv.Itoa(nextmilsec)
-		temp = temp[len(temp)-3:]
+	var newEnd timestamp.Timestamp
+
+	// test if we are already not overlapping, so keep it
+	if thisEnd.Normalize() < nextStart.Normalize() {
+		newEnd = thisEnd
+	} else {
+		// if we are overlapping, just cut it down.
+		newEnd = timestamp.ReadFromInt(nextStart.Normalize() - 1)
 	}
-	return this[:12] + next[:8] + temp
+
+	return thisStart.AsString() + "," + newEnd.AsString()
 }
 
 func main() {
